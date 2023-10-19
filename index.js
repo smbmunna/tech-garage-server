@@ -33,7 +33,7 @@ async function run() {
         const cartCollection= database.collection('cart');
 
 
-        //apis for brand data
+    //---------------------------------------brand section------------------------------------------------------------        
         app.post('/brands', async(req, res) => {
             const brand = req.body;
             console.log(brand);            
@@ -54,7 +54,7 @@ async function run() {
             res.send(result);
         })
 
-        //apis for product data
+    //---------------------------------------product section------------------------------------------------------------        
         //insert product
         app.post('/products', async(req,res)=>{
             const product= req.body;
@@ -69,8 +69,36 @@ async function run() {
             const result= await productCollection.findOne(query);
             res.send(result);
         })
+        //update product
+        app.put('/product/:id',async (req, res)=>{
+            const id= req.params.id;
+            const updatedProduct= req.body;
+            const filter= {_id: new ObjectId(id)};
+            const options = {upsert: true};
+            const newProduct= {
+                $set: {
+                    image: updatedProduct.image, 
+                    name: updatedProduct.name, 
+                    brand: updatedProduct.brand, 
+                    type: updatedProduct.type, 
+                    price: updatedProduct.price, 
+                    sDescription: updatedProduct.sDescription, 
+                    rating: updatedProduct.rating, 
+                    announced: updatedProduct.announced, 
+                    display: updatedProduct.display, 
+                    os: updatedProduct. os, 
+                    ram: updatedProduct.ram, 
+                    camera: updatedProduct.camera, 
+                    battery: updatedProduct.battery, 
 
-        //cart section
+                }
+            }
+            const result= await productCollection.updateOne(filter, newProduct, options);
+            res.send(result);
+            
+        })
+
+    //---------------------------------------//cart section------------------------------------------------------------        
         //insert to cart
         app.post('/cart',async (req, res)=>{
             const product= req.body;
