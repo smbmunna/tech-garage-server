@@ -79,6 +79,12 @@ async function run() {
             result= await cartCollection.insertOne(product);
             res.send(result);
         })
+        //load cart items for my cart
+        app.get('/cart', async(req, res)=>{
+            const result= await cartCollection.find().toArray();
+            res.send(result);
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
