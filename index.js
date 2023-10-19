@@ -30,6 +30,7 @@ async function run() {
         const database= client.db('mobileDB');
         const brandCollection= database.collection('brands');
         const productCollection= database.collection('products');
+        const cartCollection= database.collection('cart');
 
 
         //apis for brand data
@@ -67,6 +68,15 @@ async function run() {
             const id= req.params.id;            
             const query= {_id: new ObjectId(id)};
             const result= await productCollection.findOne(query);
+            res.send(result);
+        })
+
+        //cart section
+
+        //insert to cart
+        app.post('/cart',async (req, res)=>{
+            const product= req.body;
+            result= await cartCollection.insertOne(product);
             res.send(result);
         })
 
