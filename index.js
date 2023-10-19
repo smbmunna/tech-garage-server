@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -29,15 +29,46 @@ async function run() {
         //brands collection
         const database= client.db('mobileDB');
         const brandCollection= database.collection('brands');
+        const productCollection= database.collection('products');
 
 
-        //post api for insert data
+        //apis for brand data
         app.post('/brands', async(req, res) => {
             const brand = req.body;
             console.log(brand);            
             const result= await brandCollection.insertOne(brand);
             res.send(result);
         });
+        //get all brands
+        app.get('/brands', async(req, res)=>{
+            const cursor= brandCollection.find();
+            const result= await cursor.toArray();
+            res.send(result);
+        })
+        //get all products of a specific brand
+        app.get('/brand/:brand', async (req, res)=>{
+            const brand= req.params.brand;
+            const query= {brand:brand };
+            const result= await productCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        //apis for product data
+
+        //insert product
+        app.post('/products', async(req,res)=>{
+            const product= req.body;
+            console.log(product);
+            const result= await productCollection.insertOne(product);
+            res.send(result);
+        })
+        // find one product with id
+        app.get('/details/:id', async(req,res)=>{
+            const id= req.params.id;            
+            const query= {_id: new ObjectId(id)};
+            const result= await productCollection.findOne(query);
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
