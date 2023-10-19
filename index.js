@@ -55,7 +55,6 @@ async function run() {
         })
 
         //apis for product data
-
         //insert product
         app.post('/products', async(req,res)=>{
             const product= req.body;
@@ -72,7 +71,6 @@ async function run() {
         })
 
         //cart section
-
         //insert to cart
         app.post('/cart',async (req, res)=>{
             const product= req.body;
@@ -82,6 +80,14 @@ async function run() {
         //load cart items for my cart
         app.get('/cart', async(req, res)=>{
             const result= await cartCollection.find().toArray();
+            res.send(result);
+        })
+        //Delete cart item
+        app.delete('/delete/cart/:id', async (req,res)=>{
+            const id= req.params.id;
+            console.log(id);
+            const query= {_id:id};
+            const result= await cartCollection.deleteOne(query);
             res.send(result);
         })
 
