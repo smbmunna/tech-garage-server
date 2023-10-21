@@ -113,8 +113,6 @@ async function run() {
         //Delete cart item
         app.delete('/delete/cart/:id', async (req,res)=>{
             const id= req.params.id;
-            //const query= {productID:id};
-            // const query = { userEmail: userEmail, 'product._id': productId };
             const query = {'product._id': id };
             const result= await cartCollection.deleteOne(query);
             res.send(result);
